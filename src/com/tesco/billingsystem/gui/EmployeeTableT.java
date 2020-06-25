@@ -22,7 +22,14 @@ public class EmployeeTableT extends javax.swing.JFrame {
     }
     public EmployeeTableT(List<EmployeeVO> arrayMain){
         initComponents();
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        
+        //Set column name -->g
+        String header[]= new String[]{"IC no","PsWD","Name"};
+        DefaultTableModel model = new DefaultTableModel();
+        
+        model.setColumnIdentifiers(header);
+        jTable1.setModel(model);
+        
         
         Object rowData[] = new Object[3];
         for(int i=0; i<arrayMain.size();i++){
@@ -56,7 +63,7 @@ public class EmployeeTableT extends javax.swing.JFrame {
 
             },
             new String [] {
-                "IC No", "Password", "Name"
+
             }
         ));
         jScrollPane1.setViewportView(jTable1);

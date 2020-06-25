@@ -113,7 +113,7 @@ public class Login extends javax.swing.JFrame {
         
         boolean flag = empVO.isLoginFlag();
         if(flag == true){
-            MainMenu main = new MainMenu(empVO);
+            MainMenu main = new MainMenu(empVO, empBO);
             main.setVisible(true);
             this.setVisible(false);
         }else{

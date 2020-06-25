@@ -9,6 +9,7 @@ import com.tesco.billingsystem.gui.EmployeeVO;
 import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,15 +20,18 @@ import java.util.List;
  */
 //import com.sun.jdi.connect.spi.Connection;
 public class EmployeeDAO extends DbDriver{
-    private ResultSet rs;
+    
     public void getEmployee(EmployeeVO empVO){
+        ResultSet rs=null;
+        CallableStatement cStmt=null;
+        Connection conn=null;
         System.out.println(empVO.getIcno());
         System.out.println(empVO.getPwd());
         try{
             loadDriver();
-            Connection conn = DbConnection();
+            conn = DbConnection();
             
-            CallableStatement cStmt = conn.prepareCall("{call dbo.loginEmployee(?,?)}");
+            cStmt = conn.prepareCall("{call dbo.loginEmployee(?,?)}");
             cStmt.setString(1, empVO.getIcno());
             cStmt.setString(2, empVO.getPwd());
             rs = cStmt.executeQuery(); 
@@ -49,7 +53,7 @@ public class EmployeeDAO extends DbDriver{
             System.out.println("Problem with getEmployee method");
             exGE.printStackTrace();
         }finally{
-          //  closeConnection(rs, conn, cStmt);
+            closeConnection(rs,conn,cStmt);
         }
     }
     public void addEmployee(EmployeeVO empVO){
@@ -57,12 +61,14 @@ public class EmployeeDAO extends DbDriver{
         System.out.print(empVO.getIcno());
         System.out.print(empVO.getName());
         System.out.print(empVO.getPwd());
+        CallableStatement cStmt=null;
+        Connection conn=null;
         try{
            
             loadDriver();
-            Connection conn = DbConnection();
+            conn = DbConnection();
             
-            CallableStatement cStmt = conn.prepareCall("{call dbo.addEmployee(?,?,?)}");
+            cStmt = conn.prepareCall("{call dbo.addEmployee(?,?,?)}");
             cStmt.setString(1, empVO.getIcno());
             cStmt.setString(2, empVO.getPwd());
             cStmt.setString(3, empVO.getName());
@@ -73,17 +79,21 @@ public class EmployeeDAO extends DbDriver{
         }catch(Exception exAE){
             System.out.println("Problem with addEmployee method");
             exAE.printStackTrace();
+        }finally{
+            closeConnection(conn,cStmt);
         }
     }
     public void deleteEmployee(EmployeeVO empVO){
         System.out.println("deleteEmployee Method");
         System.out.println(empVO.getIcno());
         System.out.println(empVO.getPwd());
+        Connection conn=null;
+        CallableStatement cStmt=null;
         try{
             loadDriver();
-            Connection conn = DbConnection();
+            conn = DbConnection();
             
-            CallableStatement cStmt = conn.prepareCall("{call dbo.deleteEmployee(?)}");
+            cStmt = conn.prepareCall("{call dbo.deleteEmployee(?)}");
             System.out.println("3- SP ok");
             cStmt.setString(1, empVO.getIcno());
             //cStmt.setSt= cStmt.executeQuery()ring(2, empVO.getPwd());
@@ -93,6 +103,8 @@ public class EmployeeDAO extends DbDriver{
         }catch(Exception exDE){
             System.out.println("Problem with deleteEmployee method");
             exDE.printStackTrace();
+        }finally{
+            closeConnection(conn,cStmt);
         }
     }
     public void alterEmployee(EmployeeVO empVO){
@@ -100,11 +112,14 @@ public class EmployeeDAO extends DbDriver{
         System.out.println(empVO.getIcno());
         System.out.println(empVO.getPwd());
         System.out.println(empVO.getName());
+        //ResultSet rs=null;
+        CallableStatement cStmt=null;
+        Connection conn=null;
         try{
             loadDriver();
-            Connection conn = DbConnection();
+            conn = DbConnection();
             
-            CallableStatement cStmt = conn.prepareCall("{call dbo.updateEmployee(?,?,?)}");
+            cStmt = conn.prepareCall("{call dbo.updateEmployee(?,?,?)}");
             cStmt.setString(1, empVO.getIcno());
             cStmt.setString(2, empVO.getPwd());
             cStmt.setString(3, empVO.getName());
@@ -118,10 +133,14 @@ public class EmployeeDAO extends DbDriver{
     }
     public List <EmployeeVO> displayEmployee(){
         ArrayList <EmployeeVO> arrayEmployee = new ArrayList<>();
+        ResultSet rs=null;
+        CallableStatement cStmt=null;
+        Connection conn=null;
         try{
+            
             loadDriver();
-            Connection conn = DbConnection();
-            CallableStatement cStmt = conn.prepareCall("{call dbo.displayEmployee()}");
+            conn = DbConnection();
+            cStmt = conn.prepareCall("{call dbo.displayEmployee()}");
             rs = cStmt.executeQuery();
             
             while(rs.next()){
@@ -137,7 +156,7 @@ public class EmployeeDAO extends DbDriver{
         }catch(Exception ex){
             ex.printStackTrace();
         }finally{
-            System.out.println("Success query");
+            closeConnection(rs,conn,cStmt);
         }
         return arrayEmployee;
     }
