@@ -7,6 +7,8 @@ package com.tesco.billingsystem.bo;
 
 import com.tesco.billingsystem.dao.EmployeeDAO;
 import com.tesco.billingsystem.gui.EmployeeVO;
+import com.tesco.billingsystem.bo.ExtraException;
+
 import java.util.List;
 
 /**
@@ -31,11 +33,19 @@ public class EmployeeBO {
         EmployeeDAO empDAO = new EmployeeDAO();
         empDAO.alterEmployee(empVO);
     }
-    
-    public void createNewEmployee(EmployeeVO empVO){
-        System.out.println("createNewEmployee(EmployeeVO empVO)");
+     
+    public void createNewEmployee(EmployeeVO empVO) throws ExtraException{
         EmployeeDAO empDAO = new EmployeeDAO();
-        empDAO.addEmployee(empVO);
+        List<EmployeeVO> allEmployee = empDAO.displayEmployee(); 
+        //empDAO.addEmployee(empVO);
+        if(allEmployee.size()<10){
+            System.out.println("createNewEmployee(EmployeeVO empVO)");
+            empDAO.addEmployee(empVO);
+            System.out.println(allEmployee.size());   
+        }else{
+            System.out.println("More than necessary");
+            throw new ExtraException("Reach limit");
+        }   
     }
     
     public List<EmployeeVO> displayAllEmployee(){
@@ -45,4 +55,17 @@ public class EmployeeBO {
         
         return allEmployee;
     }
+    /*
+    public boolean excessEmployee(int count) throws ExtraException{
+        boolean flag = false;
+        if(count >= 20){
+            
+        }
+        else{
+            System.out.println("Added employee");
+            flag = true;
+        }
+        
+        return flag;
+    }*/
 }

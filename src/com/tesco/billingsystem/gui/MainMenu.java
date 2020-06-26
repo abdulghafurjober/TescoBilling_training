@@ -1,6 +1,6 @@
 package com.tesco.billingsystem.gui;
 
-import com.tesco.billingsystem.gui.EmployeeVO;
+import com.tesco.billingsystem.bo.ExtraException;
 import com.tesco.billingsystem.bo.EmployeeBO;
 import java.util.List;
 
@@ -263,9 +263,14 @@ public class MainMenu extends javax.swing.JFrame {
         String pswd = new_password_txt.getText();
         empVO.setPwd(pswd);
         String name = new_name_txt.getText();
-        empVO.setName(name);
+        empVO.setName(name);        
+        //empBO.createNewEmployee(empVO);
         
-        empBO.createNewEmployee(empVO);
+        try{
+            empBO.createNewEmployee(empVO);
+        }catch(ExtraException ee){
+            System.out.println("OK");
+        }
         
         
     }//GEN-LAST:event_add_employee_btnActionPerformed
